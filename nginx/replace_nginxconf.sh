@@ -12,7 +12,7 @@ NGINXENV="$(set | grep NGINX)"
 
 # for each nginxvar, replace them in the file
 for i in $NGINXENV; do
-  CONFDATA=$(sed s/"$(echo "$i" | awk -f $EXECPATH/key.awk)"/"$(echo "$i" | awk -f $EXECPATH/value.awk)"/g "$CONFDATA") 
+  CONFDATA=$(echo "$CONFDATA" | sed s/"$(echo "$i" | awk -f $EXECPATH/key.awk)"/"$(echo "$i" | awk -f $EXECPATH/value.awk)"/g) 
 done
 
 # write it to file
