@@ -13,8 +13,11 @@ for i in $NGINXENV; do
   CONFDATA=$(sed s/"$(echo "$i" | awk -f $EXECPATH/key.awk)"/"$(echo "$i" | awk -f $EXECPATH/value.awk)"/g "$CONF") 
 done
 
+# write it to file
+echo $CONFDATA > $CONF
+
 #clear out all comments and write to file
-sed /^#.*$/d "$CONFDATA" > "$CONF"
+#sed /^#.*$/d "$CONFDATA" > "$CONF"
 
 
 cat "$CONF"
