@@ -10,7 +10,7 @@ VALUE="awk -f /usr/local/bin/value.awk"
 
 # get all the nginxvars
 NGINXENV="$(env | grep NGINX)"
-
+cat $CONFDATA
 # for each nginxvar, replace them in the file
 for i in $NGINXENV; do
   SED_DATA="$( echo $SED_DATA | sed s/$(echo $i | $KEY )/$( echo $i | $VALUE )/g)"
