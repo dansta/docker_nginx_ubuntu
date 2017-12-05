@@ -18,16 +18,13 @@ RUN apt-get update
 RUN apt-get install -y nginx
 RUN apt-get install -y rsyslog
 
-# truncate the file
-RUN echo "" > /etc/nginx/nginx.conf
-
-# add our own
+# add our own config file
 ADD files/etc/nginx.conf /etc/nginx/nginx.conf
 # replace params
 ADD replace_nginxconf.sh /usr/local/bin/replace_nginxconf
 ADD key.awk /usr/local/bin/key.awk
 ADD value.awk /usr/local/bin/value.awk
-RUN chmod ugo+x /usr/local/bin/replace_nginxconf
+RUN chmod u+x /usr/local/bin/replace_nginxconf
 RUN /usr/local/bin/replace_nginxconf
 
 # add mime.types
