@@ -12,6 +12,7 @@ NGINXENV="$(env | grep NGINX)"
 
 # for each nginxvar, replace them in the file
 for i in $NGINXENV; do
+  echo $i
   EDITED_DATA="$( echo $CONFDATA | \
                sed s/$(echo $i | $KEY)/$( echo $i | $VALUE )/g)"
 done
