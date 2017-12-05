@@ -4,20 +4,19 @@ set -e
 set -x
 CONF="/etc/nginx/nginx.conf"
 CONFDATA="$(cat $CONF)"
-SED_DATA=$CONFDATA
-KEY="awk -f /usr/local/bin/key.awk"
-VALUE="awk -f /usr/local/bin/value.awk"
+KEYAWK="awk -f /usr/local/bin/key.awk"
+VALUEAWK="awk -f /usr/local/bin/value.awk"
 
 # get all the nginxvars
 NGINXENV="$(env | grep NGINX)"
-cat $CONFDATA
 # for each nginxvar, replace them in the file
 for i in $NGINXENV; do
-  SED_DATA="$( echo $SED_DATA | sed s/$(echo $i | $KEY )/$( echo $i | $VALUE )/g)"
+  KEYSED="sed s/$(echo $i | $KEYAWK)/$(echo $i | $VALUEAWK)"
+  CONFDATA="$( echo $CONFDATA | $KEYSED )"
 done
 
 # write it to file
-echo "$SED_DATA" > "$CONF"
+echo "$CONFDATA" > "$CONF"
 
 #clear out all comments and write to file
 #sed /^#.*$/d "$CONFDATA" > "$CONF"
