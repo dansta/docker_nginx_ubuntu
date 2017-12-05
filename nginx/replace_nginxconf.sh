@@ -15,3 +15,6 @@ done
 
 #clear out all comments and write to file
 sed /^#.*$/d "$CONFDATA" > "$CONF"
+
+
+cat "$CONF"
