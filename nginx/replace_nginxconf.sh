@@ -4,14 +4,14 @@ set -e
 set -x
 CONF="/etc/nginx/nginx.conf"
 CONFDATA="$(cat $CONF)"
-KEYAWK="awk -f /usr/local/bin/key.awk"
-VALUEAWK="awk -f /usr/local/bin/value.awk"
+KEYAWK="/usr/bin/awk -f /usr/local/bin/key.awk"
+VALUEAWK="/usr/bin/awk -f /usr/local/bin/value.awk"
 
 # get all the nginxvars
 NGINXENV="$(env | grep NGINX)"
 # for each nginxvar, replace them in the file
 for i in $NGINXENV; do
-  CONFDATA="$( echo "$CONFDATA" | sed s/"$(echo "$i" | "$KEYAWK")"/"$(echo "$i" | "$VALUEAWK")"/g )"
+  CONFDATA="$(echo -e "$CONFDATA" | sed s/"$(echo "$i" | "$KEYAWK")"/"$(echo "$i" | "$VALUEAWK")"/g )"
 done
 
 # write it to file
