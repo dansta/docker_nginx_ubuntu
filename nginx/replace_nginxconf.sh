@@ -15,7 +15,7 @@ for i in $NGINXENV; do
 done
 
 # write it to file
-echo "$CONFDATA" > "$CONF"
+echo -e "$CONFDATA" > "$CONF"
 
 #clear out all comments and write to file
 #sed /^#.*$/d "$CONFDATA" > "$CONF"
