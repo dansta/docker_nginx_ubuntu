@@ -11,7 +11,7 @@ VALUEAWK="/usr/bin/awk -f /usr/local/bin/value.awk"
 NGINXENV="$(env | grep NGINX)"
 # for each nginxvar, replace them in the file
 for i in $NGINXENV; do
-  CONFDATA="$(echo -e "$CONFDATA" | sed s/"$(echo "$i" | "$KEYAWK")"/"$(echo "$i" | "$VALUEAWK")"/g )"
+  CONFDATA="$(echo -e "$CONFDATA" | sed s/"$(echo $i | $KEYAWK)"/"$(echo $i | $VALUEAWK)"/g )"
 done
 
 # write it to file
