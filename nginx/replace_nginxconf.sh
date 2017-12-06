@@ -14,11 +14,6 @@ for i in $NGINXENV; do
   CONFDATA="$(echo -e "$CONFDATA" | sed s/"$(echo $i | $KEYAWK)"/"$(echo $i | $VALUEAWK)"/g )"
 done
 
-# write it to file
-echo -e "$CONFDATA" > "$CONF"
-
 #clear out all comments and write to file
-#sed /^#.*$/d "$CONFDATA" > "$CONF"
+echo -e $CONFDATA | sed /^#.*$/d > "$CONF"
 
-
-cat "$CONF"
