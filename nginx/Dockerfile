@@ -27,7 +27,7 @@ ADD key.awk /usr/local/bin/key.awk
 ADD value.awk /usr/local/bin/value.awk
 RUN chmod u+x /usr/local/bin/replace_nginxconf
 RUN /usr/local/bin/replace_nginxconf
-RUN echo /etc/nginx/nginx.conf | sed s/";"/";\n"/g > /etc/nginx/nginx.conf
+RUN cat /etc/nginx/nginx.conf | sed s/";"/";\n"/g > /etc/nginx/nginx.conf
 RUN cat /etc/nginx/nginx.conf
 # add mime.types
 ADD files/etc/mime.types /etc/nginx/conf/mime.types
