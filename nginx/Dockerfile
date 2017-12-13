@@ -17,6 +17,7 @@ HEALTHCHECK --interval=15s --timeout=3s CMD curl -x 127.0.0.1:80 || exit 1
 RUN apt-get update
 RUN apt-get install -y nginx
 RUN apt-get install -y rsyslog
+RUN apt-get install -y curl
 
 # add our own config file
 ADD files/etc/nginx.conf /etc/nginx/nginx.conf
