@@ -29,8 +29,9 @@ RUN chmod u+x /usr/local/bin/replace_nginxconf
 RUN /usr/local/bin/replace_nginxconf
 
 # debug config problem
-RUN cat /etc/nginx/nginx.conf | sed s/\;/\;\n/g > /etc/nginx/nginx.conf
 RUN cat /etc/nginx/nginx.conf
+
+
 # add mime.types
 ADD files/etc/mime.types /etc/nginx/conf/mime.types
 

@@ -1,6 +1,7 @@
 #!/bin/bash
 # set up env
 set -e
+set -x
 CONF="/etc/nginx/nginx.conf"
 CONFDATA="$(cat $CONF)"
 KEYAWK="/usr/bin/awk -f /usr/local/bin/key.awk"
