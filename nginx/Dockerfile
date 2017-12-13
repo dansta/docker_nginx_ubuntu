@@ -27,7 +27,7 @@ ADD key.awk /usr/local/bin/key.awk
 ADD value.awk /usr/local/bin/value.awk
 RUN chmod u+x /usr/local/bin/replace_nginxconf
 RUN /usr/local/bin/replace_nginxconf
-
+RUN cat /etc/nginx/nginx.conf
 # add mime.types
 ADD files/etc/mime.types /etc/nginx/conf/mime.types
 
@@ -36,7 +36,6 @@ EXPOSE ${NGINX_HTTP_PORT}/tcp
 
 # remote logging made possible
 RUN service rsyslog start
-
 # test nginx for build, run in foreground
 STOPSIGNAL SIGTERM
 CMD ["nginx", "-g", "daemon off;"]
