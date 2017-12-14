@@ -5,6 +5,7 @@ FROM ubuntu:latest
 
 # set env. replace right most column with values specific to your environment
 ENV NGINX_HTTP_PORT 80
+ENV NGINX_HTTPS_PORT 443
 ENV NGINX_DOMAIN example.com
 ENV NGINX_WWWDOMAIN www.example.com
 ENV SSL_PROTOCOLS TLSv1 TLSv1.1 TLSv1.2;
