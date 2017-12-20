@@ -1,9 +1,9 @@
 FROM ubuntu:latest
-# we base this on ubuntu
+# We base this on ubuntu
 
-# static content nginx
+# Static content nginx
 
-# set env. replace right most column with values specific to your environment
+# Set env. replace right most column with values specific to your environment
 ENV NGINX_HTTP_PORT 80
 ENV NGINX_HTTPS_PORT 443
 ENV NGINX_DOMAIN example.com
@@ -13,36 +13,37 @@ ENV SSL_CIPHERS CHACHA20:HIGH:!aNULL:!MD5:!RC4:!DES:!3DES;
 
 LABEL maintainer=dansta
 
-# check ourselves to know we are alive
+# Check ourselves to know we are alive
 HEALTHCHECK --interval=15s --timeout=3s CMD curl -x 127.0.0.1:80 || exit 1
 
-# update and install packages
+# Update and install packages
 RUN apt-get update
 RUN apt-get install -y nginx
 RUN apt-get install -y rsyslog
 RUN apt-get install -y curl
+RUN apt-get install -y python3
 
-# add our own config file
+# Add our own config file
 ADD files/etc/nginx.conf /etc/nginx/nginx.conf
-# replace params
-ADD replace_nginxconf.sh /usr/local/bin/replace_nginxconf
-ADD key.awk /usr/local/bin/key.awk
-ADD value.awk /usr/local/bin/value.awk
-RUN chmod u+x /usr/local/bin/replace_nginxconf
+# Replace params
+ADD replace_conf.py /usr/local/bin/replace_conf
+RUN chmod u+x /usr/local/bin/replace_conf
 RUN /usr/local/bin/replace_nginxconf
 
-# debug config problem
+# Debug config problem
 RUN cat /etc/nginx/nginx.conf
 
+# We dont need this for runtime
+RUN apt-get remove -y python3
 
-# add mime.types
+# Add mime.types
 ADD files/etc/mime.types /etc/nginx/conf/mime.types
 
-# document port usage for docker in case you are going to use it as a service
+# Document port usage for docker in case you are going to use it as a service
 EXPOSE ${NGINX_HTTP_PORT}/tcp
 
-# remote logging made possible
+# Remote logging made possible
 RUN service rsyslog start
-# test nginx for build, run in foreground
+# Test nginx for build, run in foreground
 STOPSIGNAL SIGTERM
 CMD ["nginx", "-g", "daemon off;"]
