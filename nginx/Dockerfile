@@ -26,9 +26,9 @@ RUN apt-get install -y python3
 # Add our own config file
 ADD files/etc/nginx.conf /etc/nginx/nginx.conf
 # Replace params
-ADD replace_conf.py /usr/local/bin/replace_conf
+ADD replace.py /usr/local/bin/replace_conf
 RUN chmod u+x /usr/local/bin/replace_conf
-RUN /usr/local/bin/replace_nginxconf
+RUN /usr/local/bin/replace_conf
 
 # Debug config problem
 RUN cat /etc/nginx/nginx.conf
