@@ -28,7 +28,7 @@ ADD files/etc/nginx.conf /etc/nginx/nginx.conf
 # Replace params
 ADD replace.py /usr/local/bin/replace_conf
 RUN chmod u+x /usr/local/bin/replace_conf
-RUN /usr/local/bin/replace_conf
+RUN /usr/local/bin/replace_conf /etc/nginx/nginx.conf NGINX
 
 # Debug config problem
 RUN cat /etc/nginx/nginx.conf
