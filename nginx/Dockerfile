@@ -47,9 +47,5 @@ ADD files/etc/mime.types /etc/nginx/conf/mime.types
 # Document port usage for docker in case you are going to use it as a service
 EXPOSE ${NGINX_HTTP_PORT}/tcp
 
-# Test nginx for build, run in foreground
-STOPSIGNAL SIGTERM
-CMD ["nginx", "-g", "daemon off;"]
-
-# Default command
+# Always run this
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
