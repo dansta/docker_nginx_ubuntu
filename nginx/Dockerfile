@@ -5,9 +5,9 @@ FROM ubuntu:latest
 
 # Set env. replace right most column with values specific to your environment
 ARG NGINX_USER
-ENV NGINX_USER ${NGINX_USER:-nobody}
+ENV NGINX_USER ${NGINX_USER:-enjinecks}
 ARG NGINX_GROUP
-ENV NGINX_GROUP ${NGINX_GROUP:-nobody}
+ENV NGINX_GROUP ${NGINX_GROUP:-enjinecks}
 ARG NGINX_WORKER_PROCESSES
 ENV NGINX_WORKER_PROCESSES ${NGINX_WORKER_PROCESSES:-4}
 ARG NGINX_HTTP_PORT
