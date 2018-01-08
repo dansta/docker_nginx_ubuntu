@@ -4,6 +4,8 @@ FROM ubuntu:latest
 # Static content nginx
 
 # Set env. replace right most column with values specific to your environment
+ARG NGINX_USER
+ENV NGINX_USER ${NGINX_USER:-nobody}
 ARG NGINX_HTTP_PORT
 ENV NGINX_HTTP_PORT ${NGINX_HTTP_PORT:-80}
 ARG NGINX_HTTPS_PORT
