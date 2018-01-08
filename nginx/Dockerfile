@@ -50,3 +50,6 @@ EXPOSE ${NGINX_HTTP_PORT}/tcp
 # Test nginx for build, run in foreground
 STOPSIGNAL SIGTERM
 CMD ["nginx", "-g", "daemon off;"]
+
+# Default command
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
