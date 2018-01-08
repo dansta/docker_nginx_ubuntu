@@ -35,7 +35,7 @@ RUN apt-get install -y curl
 RUN apt-get install -y python3
 
 # Add user, do not add home
-RUN useradd -m ${NGINX_USER} -M -s /usr/sbin/nologin
+RUN useradd ${NGINX_USER} -M -s /usr/sbin/nologin
 
 # Add our own config file
 ADD files/etc/nginx.conf /etc/nginx/nginx.conf
