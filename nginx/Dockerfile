@@ -5,11 +5,11 @@ FROM ubuntu:latest
 
 # Set env. replace right most column with values specific to your environment
 ARG NGINX_USER
-ENV NGINX_USER ${NGINX_USER:-nginx}
+ENV NGINX_USER ${NGINX_USER:-nobody}
 ARG NGINX_GROUP
-ENV NGINX_GROUP ${NGINX_GROUP:-nginx}
+ENV NGINX_GROUP ${NGINX_GROUP:-nobody}
 ARG NGINX_WORKER_PROCESSES
-ENV NGINX_WORKER_PROCESSES ${NGINX_WORKER_PROCESSES:-5}
+ENV NGINX_WORKER_PROCESSES ${NGINX_WORKER_PROCESSES:-4}
 ARG NGINX_HTTP_PORT
 ENV NGINX_HTTP_PORT ${NGINX_HTTP_PORT:-80}
 ARG NGINX_HTTPS_PORT
@@ -34,6 +34,9 @@ RUN apt-get install -y nginx
 RUN apt-get install -y curl
 RUN apt-get install -y python3
 
+# Add user, do not add home
+RUN useradd -m ${NGINX_USER} -G ${NGINX_GROUP} -M -s /usr/sbin/nologin
+
 # Add our own config file
 ADD files/etc/nginx.conf /etc/nginx/nginx.conf
 # Replace params
@@ -49,6 +52,9 @@ RUN apt-get remove -y python3
 
 # Add mime.types
 ADD files/etc/mime.types /etc/nginx/conf/mime.types
+
+# Permissions
+RUN chown -R ${NGINX_USER}:${NGINX_GROUP} /etc/nginx/
 
 # Document port usage for docker in case you are going to use it as a service
 EXPOSE ${NGINX_HTTP_PORT}/tcp
