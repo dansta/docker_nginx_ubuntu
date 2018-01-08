@@ -35,7 +35,7 @@ RUN apt-get install -y curl
 RUN apt-get install -y python3
 
 # Add user, do not add home
-RUN useradd -m ${NGINX_USER} -G ${NGINX_GROUP} -M -s /usr/sbin/nologin
+RUN useradd -m ${NGINX_USER} -M -s /usr/sbin/nologin
 
 # Add our own config file
 ADD files/etc/nginx.conf /etc/nginx/nginx.conf
@@ -59,5 +59,5 @@ RUN chown -R ${NGINX_USER}:${NGINX_GROUP} /etc/nginx/
 # Document port usage for docker in case you are going to use it as a service
 EXPOSE ${NGINX_HTTP_PORT}/tcp
 
-# Always run this
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+# Run this per default
+CMD ["nginx", "-g", "daemon off;"]
