@@ -44,9 +44,6 @@ ADD replace.py /usr/local/bin/replace_conf
 RUN chmod u+x /usr/local/bin/replace_conf
 RUN /usr/local/bin/replace_conf /etc/nginx/nginx.conf NGINX
 
-# Debug config problem
-RUN cat /etc/nginx/nginx.conf
-
 # We dont need this for runtime
 RUN apt-get remove -y python3
 
