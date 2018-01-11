@@ -60,5 +60,8 @@ VOLUME /usr/local/nginx/
 # Document port usage for docker in case you are going to use it as a service
 EXPOSE ${NGINX_HTTP_PORT}/tcp
 
+# Test the config file before launch to avoid zombie containers
+RUN /usr/bin/nginx -t
+
 # Run this per default
 CMD ["nginx", "-g", "daemon off;"]
