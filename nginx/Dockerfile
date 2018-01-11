@@ -54,7 +54,7 @@ ADD files/etc/mime.types /etc/nginx/conf/mime.types
 RUN chown -R ${NGINX_USER}:${NGINX_GROUP} /etc/nginx/
 
 # Add remote log directory volume and a directory from which we grab the web content
-VOLUME /var/log
+VOLUME /var/log/
 VOLUME /usr/local/nginx/
 
 # Document port usage for docker in case you are going to use it as a service
