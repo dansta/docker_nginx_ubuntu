@@ -59,7 +59,7 @@ VOLUME /usr/local/nginx/
 EXPOSE ${NGINX_HTTP_PORT}/tcp
 
 # Test the config file before launch to avoid zombie containers
-RUN /usr/bin/nginx -t
+RUN /usr/bin/nginx -D
 
 # Run this per default
 CMD ["nginx", "-g", "daemon off;"]
