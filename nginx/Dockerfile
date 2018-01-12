@@ -42,8 +42,7 @@ ADD files/etc/nginx.conf /etc/nginx/nginx.conf
 ADD files/etc/mime.types /etc/nginx/conf/mime.types
 # Replace params
 ADD replace.py /usr/local/bin/replace_conf
-RUN chmod u+x /usr/local/bin/replace_conf && \
-    /usr/local/bin/replace_conf /etc/nginx/nginx.conf NGINX
+RUN chmod u+x /usr/local/bin/replace_conf && /usr/local/bin/replace_conf /etc/nginx/nginx.conf NGINX
 
 # We dont need this for runtime
 RUN apt-get remove -y python3
