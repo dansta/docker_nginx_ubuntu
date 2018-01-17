@@ -29,4 +29,6 @@ Docker image of nginx on ubuntu for small static content
 
 ## Automagic
 - Start a shell and run
+  ```shell
   nginx/makeservice.sh
+  ```
