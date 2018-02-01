@@ -24,7 +24,7 @@ docker service create \
             --dns 127.0.0.1 \
             --network nginx \
             --mount source=nginx,target=/var/log/ \
-            --mount source=nginx,target=/var/local/nginx/ \
+            --mount source=nginx,target=/var/local/nginx/,readonly \
             --name "nginx" \
             --publish published=80,target=80,protocol=tcp \
 						--publish published=443,target=443,protocol=tcp \
