@@ -56,7 +56,7 @@ VOLUME /var/log/
 VOLUME /usr/local/nginx/
 
 # Document port usage for docker in case you are going to use it as a service
-EXPOSE ${NGINX_HTTP_PORT}/tcp
+EXPOSE ${NGINX_HTTP_PORT}/tcp \
        ${NGINX_HTTPS_PORT}/tcp
 
 # Test the config file before launch to avoid zombie containers
