@@ -1,9 +1,10 @@
 #!/bin/bash
 
 # Run as root in the same directory as the Dockerfile
+label="nginx.0.0.1"
 
 # Create image
-docker build -t nginx:0.0.1 .
+docker build -t $label .
 
 # Create east-west and multicast network
 docker network create \
@@ -16,6 +17,9 @@ docker network create \
 # Create volume for bind
 docker volume create nginx
 
+# Create default html directory (replace contents with your own)
+mkdir -p /var/local/nginx/"$label"
+
 # Create service
 docker service create \
             --mode global \
@@ -23,11 +27,12 @@ docker service create \
             --update-parallelism 1 \
             --dns 127.0.0.1 \
             --network nginx \
+            --log-driver syslog \
             --mount source=nginx,target=/var/log/ \
-            --mount source=nginx,target=/var/local/nginx/,readonly \
-            --name "nginx" \
+            --mount type=bind,source=/var/local/nginx/"$label",target=/var/local/nginx/,readonly \
+            --name "$label" \
             --publish published=80,target=80,protocol=tcp \
 						--publish published=443,target=443,protocol=tcp \
-            bind:0.0.1
+            $label
 
 
