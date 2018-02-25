@@ -40,6 +40,10 @@ RUN useradd ${NGINX_USER} -M -s /usr/sbin/nologin
 # Add our own config file and mime types
 ADD files/etc/nginx.conf /etc/nginx/nginx.conf
 ADD files/etc/mime.types /etc/nginx/conf/mime.types
+
+# Certificates
+RUN mkdir -p /etc/nginx/certificates/
+
 # Replace params
 ADD replace.py /usr/local/bin/replace_conf
 RUN chmod u+x /usr/local/bin/replace_conf 
@@ -54,6 +58,7 @@ RUN chown -R ${NGINX_USER}:${NGINX_GROUP} /etc/nginx/
 # Add remote log directory volume and a directory from which we grab the web content
 VOLUME /var/log/
 VOLUME /usr/local/nginx/
+VOLUME /etc/nginx/certificates/
 
 # Document port usage for docker in case you are going to use it as a service
 EXPOSE ${NGINX_HTTP_PORT}/tcp \
