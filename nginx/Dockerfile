@@ -59,13 +59,15 @@ RUN chown -R ${NGINX_USER}:${NGINX_GROUP} /etc/nginx/
 VOLUME /var/log/
 VOLUME /usr/local/nginx/
 VOLUME /etc/nginx/certificates/
+VOLUME /usr/share/nginx/html/
 
 # Document port usage for docker in case you are going to use it as a service
 EXPOSE ${NGINX_HTTP_PORT}/tcp \
        ${NGINX_HTTPS_PORT}/tcp
 
 # Test the config file before launch to avoid zombie containers
-RUN /usr/sbin/nginx -T
+#RUN /usr/sbin/nginx -T
+# Disabled for https tests, they will always fail because certificates come in second
 
 # Run this per default
 CMD ["nginx", "-g", "daemon off;"]
