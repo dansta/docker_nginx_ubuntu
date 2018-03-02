@@ -29,10 +29,15 @@ LABEL maintainer=dansta
 HEALTHCHECK --interval=15s --timeout=3s CMD curl -x 127.0.0.1:80 || exit 1
 
 # Update and install packages
-RUN apt-get update && apt-get install -y nginx \
-                                         curl \
-                                         python3 \
-                                          && rm -rf /var/lib/apt/lists/*
+RUN apt-repository ppa:certbot/certbot && \
+    apt-get update && \
+    apt-get install -y nginx \
+                       curl \
+                       python3 \
+                       software-properties-common \
+                       cron \
+                       python-certbot-nginx && \
+                       rm -rf /var/lib/apt/lists/*
 
 # Add user, do not add home
 RUN useradd ${NGINX_USER} -M -s /usr/sbin/nologin
@@ -40,6 +45,9 @@ RUN useradd ${NGINX_USER} -M -s /usr/sbin/nologin
 # Add our own config file and mime types
 ADD files/etc/nginx.conf /etc/nginx/nginx.conf
 ADD files/etc/mime.types /etc/nginx/conf/mime.types
+ADD files/crontab /etc/cron.d/certbot_renew
+RUN chmod 0644 /etc/cron.d/certbot_renew
+RUN touch /var/log/cron.log
 
 # Certificates
 RUN mkdir -p /etc/nginx/certificates/
@@ -54,6 +62,9 @@ RUN apt-get remove -y python3
 
 # Permissions
 RUN chown -R ${NGINX_USER}:${NGINX_GROUP} /etc/nginx/
+
+# Generate certificates
+RUN certbot --nginx certonly
 
 # Add remote log directory volume and a directory from which we grab the web content
 VOLUME /var/log/
