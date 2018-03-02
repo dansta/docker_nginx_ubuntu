@@ -29,15 +29,16 @@ LABEL maintainer=dansta
 HEALTHCHECK --interval=15s --timeout=3s CMD curl -x 127.0.0.1:80 || exit 1
 
 # Update and install packages
-RUN apt-repository ppa:certbot/certbot && \
-    apt-get update && \
+RUN apt-get update && \
     apt-get install -y nginx \
                        curl \
                        python3 \
                        software-properties-common \
-                       cron \
-                       python-certbot-nginx && \
-                       rm -rf /var/lib/apt/lists/*
+                       cron && \
+    add-apt-repository -y ppa:certbot/certbot && \
+    apt-get update && \
+    apt-get -y install certbot && \
+    rm -rf /var/lib/apt/lists/*
 
 # Add user, do not add home
 RUN useradd ${NGINX_USER} -M -s /usr/sbin/nologin
@@ -56,9 +57,10 @@ RUN mkdir -p /etc/nginx/certificates/
 ADD replace.py /usr/local/bin/replace_conf
 RUN chmod u+x /usr/local/bin/replace_conf 
 RUN /usr/local/bin/replace_conf /etc/nginx/nginx.conf NGINX
+RUN rm /usr/local/bin/replace_conf
 
-# We dont need this for runtime
-RUN apt-get remove -y python3
+# Remove what we do not need for runtime
+RUN apt-get -y autoremove
 
 # Permissions
 RUN chown -R ${NGINX_USER}:${NGINX_GROUP} /etc/nginx/

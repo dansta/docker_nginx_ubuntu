@@ -44,5 +44,5 @@ docker service create \
             $label
 
 
-# Start the certificate service
-./certificates.sh $domain $me
+# Start the certificate service, disabled because currently we are making it inhouse
+#./certificates.sh $domain $me
