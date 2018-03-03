@@ -1,20 +1,20 @@
 #!/bin/bash
 
 # You will want to change these parameters to your own
-label_cert="certbot:0.0.1"
-label_webserver="nginx.0.0.1"
+label_cert="certbot"
+label_webserver="nginx:0.0.1"
 domain="example.com"
 you="me"
 
-if $(whoami) -neq 'root'; then
+if [ "$(whoami)" != 'root' ]; then
   echo "Must be run as root"
   exit 1
 fi
 
 
 # Create images
-docker build -t $label_cert Dockerfile_certbot
-docker build -t $label_webserver Dockerfile_webserver
+docker build -t $label_cert -f Dockerfile_certbot .
+docker build -t $label_webserver -f Dockerfile_webserver .
 
 # Create east-west and multicast network
 docker network create \
@@ -54,10 +54,9 @@ docker service create \
 
 # Start the certificate service, disabled because currently we are making it inhouse
 docker run -d \
-           --rm true \
            -e NGINX_DOMAIN=$domain \
            -e NGINX_ADMIN=$you \
-           -n $label_cert \
+           --name="$label_cert" \
            --restart on-failure \
            --mount source=certificates,target=/usr/share/nginx/html \
            --mount source=nginxconf,target=/etc/nginx/ \
