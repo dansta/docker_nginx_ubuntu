@@ -37,7 +37,7 @@ RUN apt-get update && \
                        cron && \
     add-apt-repository -y ppa:certbot/certbot && \
     apt-get update && \
-    apt-get -y install certbot && \
+    apt-get -y install python3-certbot-nginx && \
     rm -rf /var/lib/apt/lists/*
 
 # Add user, do not add home

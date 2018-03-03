@@ -1,12 +1,20 @@
 #!/bin/bash
 
-# Run as root in the same directory as the Dockerfile
-label="nginx.0.0.1"
-domain=example.com
-you=me
+# You will want to change these parameters to your own
+label_cert="certbot:0.0.1"
+label_webserver="nginx.0.0.1"
+domain="example.com"
+you="me"
 
-# Create image
-docker build -t $label .
+if $(whoami) -neq 'root'; then
+  echo "Must be run as root"
+  exit 1
+fi
+
+
+# Create images
+docker build -t $label_cert Dockerfile_certbot
+docker build -t $label_webserver Dockerfile_webserver
 
 # Create east-west and multicast network
 docker network create \
@@ -17,12 +25,12 @@ docker network create \
             nginx 
 
 # Create volume for bind
-docker volume create nginx
+docker volume create nginxlogs
+docker volume create nginxconf
 docker volume create certificates
-docker volume create htmlcontent
 
 # Create default html directory (replace contents with your own)
-mkdir -p /var/local/nginx/"$label"
+mkdir -p /var/local/nginx/"$label_webserver"
 
 # Create service
 docker service create \
@@ -34,15 +42,27 @@ docker service create \
             --dns 127.0.0.1 \
             --network nginx \
             --log-driver syslog \
+            --mount source=nginxconfig,target=/etc/nginx/,readonly \
             --mount source=nginxlogs,target=/var/log/ \
-            --mount source=certificates,target=/usr/share/nginx/html/ \
-            --mount source=htmlcontent,target=/usr/share/nginx/html/ \
-            --mount type=bind,source=/var/local/nginx/"$label",target=/var/local/nginx/,readonly \
-            --name "$label" \
+            --mount source=certificates,target=/usr/share/nginx/html/,readonly \
+            --mount type=bind,source=/var/local/nginx/"$label_webserver",target=/usr/share/nginx/html/,readonly \
+            --name "$label_webserver" \
             --publish published=80,target=80,protocol=tcp \
             --publish published=443,target=443,protocol=tcp \
-            $label
+            $label_webserver
 
 
 # Start the certificate service, disabled because currently we are making it inhouse
-#./certificates.sh $domain $me
+docker run -d \
+           --rm true \
+           -e NGINX_DOMAIN=$domain \
+           -e NGINX_ADMIN=$you \
+           -n $label_cert \
+           --restart on-failure \
+           --mount source=certificates,target=/usr/share/nginx/html \
+           --mount source=nginxconf,target=/etc/nginx/ \
+           $label_cert
+
+
+echo
+echo "Build completed"
