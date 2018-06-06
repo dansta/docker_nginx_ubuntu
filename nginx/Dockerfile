@@ -26,25 +26,42 @@ ENV NGINX_SSL_CIPHERS ${NGINX_SSL_CIPHERS:-CHACHA20:HIGH:!aNULL:!MD5:!RC4:!DES:!
 LABEL maintainer=dansta
 
 # Check ourselves to know we are alive
-HEALTHCHECK --interval=15s --timeout=3s CMD curl -x 127.0.0.1:80 || exit 1
+#HEALTHCHECK --interval=15s --timeout=3s CMD curl -x 127.0.0.1:80 || exit 1
 
 # Update and install packages
-RUN apt-get update && \
-    apt-get install -y nginx \
+RUN apt-get update
+RUN apt-get -y install software-properties-common
+RUN add-apt-repository -y ppa:certbot/certbot
+
+RUN apt update
+RUN apt-get install -y nginx \
                        curl \
-                       python3 && \
+                       python3 \
+		       python3-certbot-nginx \
+                       cron && \
     rm -rf /var/lib/apt/lists/*
+
+# Add renewalscripts
+ADD files/crontab /etc/cron.d/certbot_renew
+RUN chmod 0644 /etc/cron.d/certbot_renew
+RUN touch /var/log/cron.log
+
+
 
 # Add user, do not add home
 RUN useradd ${NGINX_USER} -M -s /usr/sbin/nologin
 
 # Add our own config file and mime types
+#ADD files/etc/nginx.conf /etc/nginx/sites-available/${NGINX_WWWDOMAIN}
 ADD files/etc/nginx.conf /etc/nginx/nginx.conf
+ADD files/wrapper.sh /usr/local/bin/wrapper.sh
 ADD files/etc/mime.types /etc/nginx/conf/mime.types
 
 # Replace params
 ADD replace.py /usr/local/bin/replace_conf
-RUN chmod u+x /usr/local/bin/replace_conf 
+RUN chmod u+x /usr/local/bin/replace_conf /usr/local/bin/wrapper.sh
+RUN /usr/local/bin/replace_conf /usr/local/bin/wrapper.sh NGINX
+#RUN /usr/local/bin/replace_conf /etc/nginx/sites-available/${NGINX_WWWDOMAIN} NGINX
 RUN /usr/local/bin/replace_conf /etc/nginx/nginx.conf NGINX
 RUN rm /usr/local/bin/replace_conf
 
@@ -63,5 +80,6 @@ VOLUME /usr/share/nginx/html/
 EXPOSE ${NGINX_HTTP_PORT}/tcp \
        ${NGINX_HTTPS_PORT}/tcp
 
+CMD ["/usr/local/bin/wrapper.sh"]
 # Run this per default
-CMD ["nginx", "-g", "daemon off;"]
+#CMD ["nginx", "-g", "daemon off;"]
